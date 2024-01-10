@@ -39,18 +39,18 @@ def load():
     while True:
         if os.path.exists('todos.json'):
             print('LOADING DATA...')
-            try:
-                with open('todos.json', 'r') as file:
+            with open('todos.json', 'r') as file:
+                try:
                     data = json.load(file)
-                    print('\n\nTO-DO LIST')
-                    print('-------------------------------')
-                    for i in data:
-                        print('- ' + i["content"])
-                    input('\n\n[ENTER] TO STOP WATCHING')
+                except json.JSONDecodeError:
+                    print('ERROR WHILE READING DATA')
+                    print('EXITING FUNCTION')
                     break
-            except json.JSONDecodeError:
-                print('ERROR WHILE READING DATA')
-                print('EXITING FUNCTION')
+                print('\n\nTO-DO LIST')
+                print('-------------------------------')
+                for i in data:
+                    print('- ' + i["content"])
+                input('\n\n[ENTER] TO STOP WATCHING')
                 break
         else:
             print('FILE NOT FOUND. CREATING A NEW FILE...')
@@ -86,28 +86,33 @@ def add():
     load()
 
 
-def delete():
+def delete(): # not working
     while True:
         if os.path.exists('todos.json'):
             print('LOADING DATA...')
-            try:
-                with open('todos.json', 'r') as file:
+            with open('todos.json', 'r') as file:
+                try:
                     data = json.load(file)
-                    print('\n\nTO-DO LIST')
-                    print('-------------------------------')
-                    todolist = []
-                    for i in data:
-                        todolist.append(i["content"])
-                    input('\n\n[ENTER] TO STOP WATCHING')
+                except json.JSONDecodeError:
+                    print('ERROR WHILE READING DATA')
+                    print('EXITING FUNCTION')
                     break
-            except json.JSONDecodeError:
-                print('ERROR WHILE READING DATA')
-                print('EXITING FUNCTION')
-                break
+            print('\n\nTO-DO LIST')
+            print('-------------------------------')
+            for index, item in enumerate(data, start=1):
+                print(f'{index}. {item["content"]}')
+            userinput = input('CHOOSE WHICH TASK YOU WANT TO DELETE: ')
+            for index, item in enumerate(data, start=1):
+                if index == userinput:
+                    del data[item["id"]]
+            with open('todos.json', 'w') as file:
+                json.dump(data, file)
+            input('\n\n[ENTER] TO STOP WATCHING')
+            break
         else:
             print('FILE NOT FOUND. CREATING A NEW FILE...')
             create()
-    questions()
+    load()
 
 
 if __name__ == '__main__':
