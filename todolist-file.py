@@ -4,9 +4,7 @@ import time
 
 
 def main():
-    print('TO-DO LIST')
-    print('-------------------------------')
-    print('WELCOME TO YOUR TO-DO LIST\n')
+    print('WELCOME TO YOUR TO-DO LIST')
     questions()
 
 
@@ -86,7 +84,7 @@ def add():
     load()
 
 
-def delete(): # not working
+def delete():
     while True:
         if os.path.exists('todos.json'):
             print('LOADING DATA...')
@@ -97,17 +95,28 @@ def delete(): # not working
                     print('ERROR WHILE READING DATA')
                     print('EXITING FUNCTION')
                     break
+            if len(data) == 0:
+                print('NO TASKS FOUND')
+                break
             print('\n\nTO-DO LIST')
             print('-------------------------------')
             for index, item in enumerate(data, start=1):
                 print(f'{index}. {item["content"]}')
-            userinput = input('CHOOSE WHICH TASK YOU WANT TO DELETE: ')
+            userinput = input('\nCHOOSE WHICH TASK YOU WANT TO DELETE / [ENTER] TO CANCEL: ')
+            #print(data)
+            found = False
             for index, item in enumerate(data, start=1):
-                if index == userinput:
-                    del data[item["id"]]
+                if str(index) == userinput:
+                    found = True
+                    #print(f'{userinput} {index}')
+                    #print(item["id"])
+                    del data[index -1]
+                    print('TASK DELETED')
+            if not found:
+                print('NOTHING FOUND TO DELETE RETURNING TO TO-DO LIST')
+                break
             with open('todos.json', 'w') as file:
                 json.dump(data, file)
-            input('\n\n[ENTER] TO STOP WATCHING')
             break
         else:
             print('FILE NOT FOUND. CREATING A NEW FILE...')
