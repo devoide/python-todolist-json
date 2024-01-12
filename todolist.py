@@ -63,25 +63,28 @@ def create():
 
 
 def add():
-    task = input('NEW TASK: ')
-    if task == '':
-        print('YOU MUST ATLEAST WRITE ONE CHARACTER')
-        return
-
-    if os.path.exists('todos.json'):
-        with open('todos.json', 'r') as file:
-            try:
-                tasks = json.load(file)
-            except json.JSONDecodeError:
+    while True:
+        task = input('NEW TASK: ')
+        if task == ' ' * len(task):
+            print('YOU MUST ATLEAST WRITE ONE CHARACTER')
+        else:
+            if os.path.exists('todos.json'):
+                with open('todos.json', 'r') as file:
+                    try:
+                        tasks = json.load(file)
+                    except json.JSONDecodeError:
+                        print('ERROR WHILE READING DATA')
+                        print('EXITING FUNCTION')
+                        break
+            else:
                 tasks = []
-    else:
-        tasks = []
-    item = {"id": str(time.time()), "content": str(task)}
-    tasks.append(item)
-    with open('todos.json', 'w') as file:
-        json.dump(tasks, file)
-    print('NEW TASK ADDED')
-    load()
+            item = {"id": str(time.time()), "content": str(task)}
+            tasks.append(item)
+            with open('todos.json', 'w') as file:
+                json.dump(tasks, file)
+            print('NEW TASK ADDED')
+            load()
+            break
 
 
 def delete():
