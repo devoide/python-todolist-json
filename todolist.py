@@ -1,3 +1,4 @@
+
 import os
 import json
 import time
@@ -49,6 +50,11 @@ def load():
             create()
 
 
+def write(tasks):
+    with open('todos.json', 'w') as file:
+        json.dump(tasks, file)
+
+
 def show():
     data = load()
     print('\n\nTO-DO LIST')
@@ -61,8 +67,7 @@ def show():
 
 def create():
     tasks = []
-    with open('todos.json', 'w') as file:
-        json.dump(tasks, file)
+    write(tasks)
 
 
 def add():
@@ -74,8 +79,7 @@ def add():
             tasks = load()
             item = {"id": str(time.time()), "content": str(task)}
             tasks.append(item)
-            with open('todos.json', 'w') as file:
-                json.dump(tasks, file)
+            write(tasks)
             print('NEW TASK ADDED')
             show()
             break
@@ -104,8 +108,7 @@ def delete():
         if not found:
             print('NOTHING FOUND TO DELETE RETURNING TO TO-DO LIST')
             break
-        with open('todos.json', 'w') as file:
-            json.dump(data, file)
+        write(data)
         break
     show()
 
